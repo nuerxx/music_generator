@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>مكتبة الموسيقى - مولد الموسيقى</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .music-wave {
+            background: linear-gradient(45deg, #3B82F6, #8B5CF6, #EC4899);
+            background-size: 400% 400%;
+            animation: gradient-wave 3s ease infinite;
+        }
+        @keyframes gradient-wave {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .track-card {
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .track-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .mini-player {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+        }
+        .waveform-bar {
+            animation: waveform-pulse 2s ease-in-out infinite;
+        }
+        @keyframes waveform-pulse {
+            0%, 100% { height: 20%; }
+            50% { height: 100%; }
+        }
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+        }
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .batch-toolbar {
+            transform: translateY(100%);
+            transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .batch-toolbar.active {
+            transform: translateY(0);
+        }
+    </style>
+<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fmusicgene9641back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.6"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen" dir="rtl">
+    <!-- Header Navigation -->
+    <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-reverse space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                        </svg>
+                    </div>
+                    <h1 class="text-xl font-bold text-slate-800">مولد الموسيقى</h1>
+                </div>
+
+                <!-- Navigation Menu -->
+                <nav class="hidden md:flex items-center space-x-reverse space-x-8">
+                    <a href="music_generation_hub.html" class="text-slate-600 hover:text-blue-600 transition-colors">المولد</a>
+                    <a href="music_library.html" class="text-blue-600 font-medium border-b-2 border-blue-600 pb-1">المكتبة</a>
+                    <a href="user_profile_settings.html" class="text-slate-600 hover:text-blue-600 transition-colors">الإعدادات</a>
+                    <a href="user_authentication.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">تسجيل الدخول</a>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors" onclick="toggleMobileMenu()">
+                    <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-slate-200">
+            <div class="px-4 py-2 space-y-1">
+                <a href="music_generation_hub.html" class="block px-3 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors">المولد</a>
+                <a href="music_library.html" class="block px-3 py-2 text-blue-600 font-medium bg-blue-50 rounded-lg">المكتبة</a>
+                <a href="user_profile_settings.html" class="block px-3 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors">الإعدادات</a>
+                <a href="user_authentication.html" class="block px-3 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">تسجيل الدخول</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page Header -->
+        <section class="mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">مكتبة الموسيقى</h2>
+                    <p class="text-slate-600">جميع مقاطعك الموسيقية المحفوظة في مكان واحد</p>
+                </div>
+                <div class="flex items-center space-x-reverse space-x-3">
+                    <span id="trackCount" class="text-sm text-slate-500 bg-slate-100 px-3 py-1 rounded-full">12 مقطع</span>
+                    <button onclick="toggleBulkMode()" id="bulkModeBtn" class="text-blue-600 hover:bg-blue-50 px-3 py-2 rounded-lg transition-colors text-sm font-medium">
+                        تحديد متعدد
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search and Filter Bar -->
+            <div class="bg-white rounded-xl shadow-medium p-4 mb-6">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <!-- Search Input -->
+                    <div class="flex-1 relative">
+                        <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="البحث في المقاطع..." class="w-full pr-10 pl-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors" onkeyup="filterTracks()" />
+                    </div>
+
+                    <!-- Sort Dropdown -->
+                    <div class="relative">
+                        <select id="sortSelect" onchange="sortTracks()" class="appearance-none bg-white border border-slate-200 rounded-lg px-4 py-2 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
+                            <option value="newest">الأحدث</option>
+                            <option value="oldest">الأقدم</option>
+                            <option value="most-played">الأكثر تشغيلاً</option>
+                        </select>
+                        <svg class="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+
+                    <!-- Filter Reset -->
+                    <button onclick="resetFilters()" class="px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors flex items-center">
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                        إعادة تعيين
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading State -->
+        <section id="loadingState" class="hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Skeleton Cards -->
+                <div class="bg-white rounded-xl p-6 shadow-medium" v-for="i in 6">
+                    <div class="skeleton h-4 w-3/4 mb-4 rounded"></div>
+                    <div class="skeleton h-16 w-full mb-4 rounded"></div>
+                    <div class="skeleton h-10 w-full rounded"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Empty State -->
+        <section id="emptyState" class="hidden text-center py-16">
+            <div class="max-w-md mx-auto">
+                <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-12 h-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">لا توجد مقاطع موسيقية بعد</h3>
+                <p class="text-slate-600 mb-6">ابدأ بإنشاء أول مقطع موسيقي لك واستمتع بمكتبتك الشخصية</p>
+                <a href="music_generation_hub.html" class="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-700 transition-colors breathe-button focus-depth">
+                    <span class="text-xl ml-2">🎵</span>
+                    إنشاء موسيقى جديدة
+                </a>
+            </div>
+        </section>
+
+        <!-- Music Tracks Grid -->
+        <section id="tracksGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Track Card 1 -->
+            <div class="track-card bg-white rounded-xl shadow-medium overflow-hidden" data-track-id="1" data-date="2025-08-06" data-plays="15">
+                <div class="p-6">
+                    <!-- Track Header -->
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-slate-800 mb-1">مقطع هادئ #1</h3>
+                            <p class="text-sm text-slate-500">6 أغسطس 2025 • 60 ثانية</p>
+                        </div>
+                        <div class="flex items-center space-x-reverse space-x-2">
+                            <input type="checkbox" class="bulk-checkbox hidden w-4 h-4 text-blue-600 rounded focus:ring-blue-500" data-track-id="1" />
+                            <button onclick="toggleFavorite(1)" class="text-slate-400 hover:text-red-500 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Waveform Visualization -->
+                    <div class="mini-player rounded-lg p-4 mb-4">
+                        <div class="flex items-center justify-center h-12 mb-3">
+                            <div class="flex items-end space-x-1 h-8">
+                                <div class="w-1 bg-blue-400 rounded-full waveform-bar" style="height: 30%; animation-delay: 0s;"></div>
+                                <div class="w-1 bg-purple-400 rounded-full waveform-bar" style="height: 70%; animation-delay: 0.1s;"></div>
+                                <div class="w-1 bg-blue-400 rounded-full waveform-bar" style="height: 50%; animation-delay: 0.2s;"></div>
+                                <div class="w-1 bg-purple-400 rounded-full waveform-bar" style="height: 90%; animation-delay: 0.3s;"></div>
+                                <div class="w-1 bg-blue-400 rounded-full waveform-bar" style="height: 40%; animation-delay: 0.4s;"></div>
+                                <div class="w-1 bg-purple-400 rounded-full waveform-bar" style="height: 80%; animation-delay: 0.5s;"></div>
+                                <div class="w-1 bg-blue-400 rounded-full waveform-bar" style="height: 60%; animation-delay: 0.6s;"></div>
+                                <div class="w-1 bg-purple-400 rounded-full waveform-bar" style="height: 35%; animation-delay: 0.7s;"></div>
+                                <div class="w-1 bg-blue-400 rounded-full waveform-bar" style="height: 75%; animation-delay: 0.8s;"></div>
+                                <div class="w-1 bg-purple-400 rounded-full waveform-bar" style="height: 55%; animation-delay: 0.9s;"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Mini Player Controls -->
+                        <div class="flex items-center justify-between">
+                            <button onclick="togglePlay(1)" class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </button>
+                            <div class="flex-1 mx-3">
+                                <input type="range" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" min="0" max="100" value="0" />
+                            </div>
+                            <span class="text-xs text-slate-500">0:00</span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex gap-2">
+                        <button onclick="downloadTrack(1)" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors breathe-button focus-depth">
+                            <span class="flex items-center justify-center">
+                                <span class="ml-2">⬇️</span>
+                                تحميل
+                            </span>
+                        </button>
+                        <button onclick="shareTrack(1)" class="bg-slate-100 hover:bg-slate-200 text-slate-600 p-2 rounded-lg transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Play Count -->
+                    <div class="flex items-center justify-between mt-3 text-xs text-slate-500">
+                        <span>تم التشغيل 15 مرة</span>
+                        <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full">هادئ</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Track Card 2 -->
+            <div class="track-card bg-white rounded-xl shadow-medium overflow-hidden" data-track-id="2" data-date="2025-08-05" data-plays="8">
+                <div class="p-6">
+                    <!-- Track Header -->
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-slate-800 mb-1">مقطع هادئ #2</h3>
+                            <p class="text-sm text-slate-500">5 أغسطس 2025 • 60 ثانية</p>
+                        </div>
+                        <div class="flex items-center space-x-reverse space-x-2">
+                            <input type="checkbox" class="bulk-checkbox hidden w-4 h-4 text-blue-600 rounded focus:ring-blue-500" data-track-id="2" />
+                            <button onclick="toggleFavorite(2)" class="text-red-500 hover:text-red-600 transition-colors">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Waveform Visualization -->
+                    <div class="mini-player rounded-lg p-4 mb-4">
+                        <div class="flex items-center justify-center h-12 mb-3">
+                            <div class="flex items-end space-x-1 h-8">
+                                <div class="w-1 bg-green-400 rounded-full waveform-bar" style="height: 45%; animation-delay: 0s;"></div>
+                                <div class="w-1 bg-blue-400 rounded-full waveform-bar" style="height: 80%; animation-delay: 0.1s;"></div>
+                                <div class="w-1 bg-green-400 rounded-full waveform-bar" style="height: 60%; animation-delay: 0.2s;"></div>
+                                <div class="w-1 bg-blue-400 rounded-full waveform-bar" style="height: 95%; animation-delay: 0.3s;"></div>
+                                <div class="w-1 bg-green-400 rounded-full waveform-bar" style="height: 25%; animation-delay: 0.4s;"></div>
+                                <div class="w-1 bg-blue-400 rounded-full waveform-bar" style="height: 70%; animation-delay: 0.5s;"></div>
+                                <div class="w-1 bg-green-400 rounded-full waveform-bar" style="height: 85%; animation-delay: 0.6s;"></div>
+                                <div class="w-1 bg-blue-400 rounded-full waveform-bar" style="height: 40%; animation-delay: 0.7s;"></div>
+                                <div class="w-1 bg-green-400 rounded-full waveform-bar" style="height: 65%; animation-delay: 0.8s;"></div>
+                                <div class="w-1 bg-blue-400 rounded-full waveform-bar" style="height: 50%; animation-delay: 0.9s;"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Mini Player Controls -->
+                        <div class="flex items-center justify-between">
+                            <button onclick="togglePlay(2)" class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </button>
+                            <div class="flex-1 mx-3">
+                                <input type="range" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" min="0" max="100" value="0" />
+                            </div>
+                            <span class="text-xs text-slate-500">0:00</span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex gap-2">
+                        <button onclick="downloadTrack(2)" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors breathe-button focus-depth">
+                            <span class="flex items-center justify-center">
+                                <span class="ml-2">⬇️</span>
+                                تحميل
+                            </span>
+                        </button>
+                        <button onclick="shareTrack(2)" class="bg-slate-100 hover:bg-slate-200 text-slate-600 p-2 rounded-lg transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Play Count -->
+                    <div class="flex items-center justify-between mt-3 text-xs text-slate-500">
+                        <span>تم التشغيل 8 مرات</span>
+                        <span class="bg-purple-100 text-purple-700 px-2 py-1 rounded-full">محبوب</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Track Card 3 -->
+            <div class="track-card bg-white rounded-xl shadow-medium overflow-hidden" data-track-id="3" data-date="2025-08-04" data-plays="23">
+                <div class="p-6">
+                    <!-- Track Header -->
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-slate-800 mb-1">مقطع هادئ #3</h3>
+                            <p class="text-sm text-slate-500">4 أغسطس 2025 • 60 ثانية</p>
+                        </div>
+                        <div class="flex items-center space-x-reverse space-x-2">
+                            <input type="checkbox" class="bulk-checkbox hidden w-4 h-4 text-blue-600 rounded focus:ring-blue-500" data-track-id="3" />
+                            <button onclick="toggleFavorite(3)" class="text-slate-400 hover:text-red-500 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Waveform Visualization -->
+                    <div class="mini-player rounded-lg p-4 mb-4">
+                        <div class="flex items-center justify-center h-12 mb-3">
+                            <div class="flex items-end space-x-1 h-8">
+                                <div class="w-1 bg-orange-400 rounded-full waveform-bar" style="height: 55%; animation-delay: 0s;"></div>
+                                <div class="w-1 bg-pink-400 rounded-full waveform-bar" style="height: 85%; animation-delay: 0.1s;"></div>
+                                <div class="w-1 bg-orange-400 rounded-full waveform-bar" style="height: 40%; animation-delay: 0.2s;"></div>
+                                <div class="w-1 bg-pink-400 rounded-full waveform-bar" style="height: 75%; animation-delay: 0.3s;"></div>
+                                <div class="w-1 bg-orange-400 rounded-full waveform-bar" style="height: 90%; animation-delay: 0.4s;"></div>
+                                <div class="w-1 bg-pink-400 rounded-full waveform-bar" style="height: 30%; animation-delay: 0.5s;"></div>
+                                <div class="w-1 bg-orange-400 rounded-full waveform-bar" style="height: 65%; animation-delay: 0.6s;"></div>
+                                <div class="w-1 bg-pink-400 rounded-full waveform-bar" style="height: 80%; animation-delay: 0.7s;"></div>
+                                <div class="w-1 bg-orange-400 rounded-full waveform-bar" style="height: 45%; animation-delay: 0.8s;"></div>
+                                <div class="w-1 bg-pink-400 rounded-full waveform-bar" style="height: 70%; animation-delay: 0.9s;"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Mini Player Controls -->
+                        <div class="flex items-center justify-between">
+                            <button onclick="togglePlay(3)" class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </button>
+                            <div class="flex-1 mx-3">
+                                <input type="range" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" min="0" max="100" value="0" />
+                            </div>
+                            <span class="text-xs text-slate-500">0:00</span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex gap-2">
+                        <button onclick="downloadTrack(3)" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors breathe-button focus-depth">
+                            <span class="flex items-center justify-center">
+                                <span class="ml-2">⬇️</span>
+                                تحميل
+                            </span>
+                        </button>
+                        <button onclick="shareTrack(3)" class="bg-slate-100 hover:bg-slate-200 text-slate-600 p-2 rounded-lg transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Play Count -->
+                    <div class="flex items-center justify-between mt-3 text-xs text-slate-500">
+                        <span>تم التشغيل 23 مرة</span>
+                        <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full">شائع</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Load More Button -->
+        <div class="text-center mt-8">
+            <button onclick="loadMoreTracks()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-3 rounded-xl font-medium transition-colors breathe-button focus-depth">
+                تحميل المزيد من المقاطع
+            </button>
+        </div>
+    </main>
+
+    <!-- Batch Actions Toolbar -->
+    <div id="batchToolbar" class="batch-toolbar fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 shadow-large z-40">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-reverse space-x-4">
+                <span id="selectedCount" class="text-sm text-slate-600">0 مقطع محدد</span>
+                <button onclick="selectAll()" class="text-blue-600 hover:text-blue-700 text-sm font-medium">تحديد الكل</button>
+                <button onclick="clearSelection()" class="text-slate-600 hover:text-slate-700 text-sm font-medium">إلغاء التحديد</button>
+            </div>
+            <div class="flex items-center space-x-reverse space-x-3">
+                <button onclick="downloadSelected()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors breathe-button focus-depth">
+                    <span class="flex items-center">
+                        <span class="ml-2">⬇️</span>
+                        تحميل المحدد
+                    </span>
+                </button>
+                <button onclick="deleteSelected()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors breathe-button focus-depth">
+                    حذف المحدد
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="text-center">
+                <p class="text-slate-600">© 2025 مولد الموسيقى. جميع الحقوق محفوظة.</p>
+                <div class="flex justify-center space-x-reverse space-x-6 mt-4">
+                    <a href="javascript:void(0)" class="text-slate-500 hover:text-blue-600 transition-colors">الشروط</a>
+                    <a href="javascript:void(0)" class="text-slate-500 hover:text-blue-600 transition-colors">الخصوصية</a>
+                    <a href="javascript:void(0)" class="text-slate-500 hover:text-blue-600 transition-colors">الدعم</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Global variables
+        let isBulkMode = false;
+        let selectedTracks = new Set();
+        let currentlyPlaying = null;
+        let tracks = [
+            { id: 1, name: 'مقطع هادئ #1', date: '2025-08-06', plays: 15, favorite: false },
+            { id: 2, name: 'مقطع هادئ #2', date: '2025-08-05', plays: 8, favorite: true },
+            { id: 3, name: 'مقطع هادئ #3', date: '2025-08-04', plays: 23, favorite: false }
+        ];
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Toggle bulk selection mode
+        function toggleBulkMode() {
+            isBulkMode = !isBulkMode;
+            const bulkModeBtn = document.getElementById('bulkModeBtn');
+            const checkboxes = document.querySelectorAll('.bulk-checkbox');
+            const batchToolbar = document.getElementById('batchToolbar');
+
+            if (isBulkMode) {
+                bulkModeBtn.textContent = 'إلغاء التحديد';
+                bulkModeBtn.classList.add('bg-red-50', 'text-red-600');
+                checkboxes.forEach(cb => cb.classList.remove('hidden'));
+                batchToolbar.classList.add('active');
+            } else {
+                bulkModeBtn.textContent = 'تحديد متعدد';
+                bulkModeBtn.classList.remove('bg-red-50', 'text-red-600');
+                checkboxes.forEach(cb => {
+                    cb.classList.add('hidden');
+                    cb.checked = false;
+                });
+                batchToolbar.classList.remove('active');
+                selectedTracks.clear();
+                updateSelectedCount();
+            }
+        }
+
+        // Update selected count
+        function updateSelectedCount() {
+            const selectedCount = document.getElementById('selectedCount');
+            selectedCount.textContent = `${selectedTracks.size} مقطع محدد`;
+        }
+
+        // Handle checkbox changes
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('bulk-checkbox')) {
+                const trackId = parseInt(e.target.dataset.trackId);
+                if (e.target.checked) {
+                    selectedTracks.add(trackId);
+                } else {
+                    selectedTracks.delete(trackId);
+                }
+                updateSelectedCount();
+            }
+        });
+
+        // Select all tracks
+        function selectAll() {
+            const checkboxes = document.querySelectorAll('.bulk-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = true;
+                selectedTracks.add(parseInt(cb.dataset.trackId));
+            });
+            updateSelectedCount();
+        }
+
+        // Clear selection
+        function clearSelection() {
+            const checkboxes = document.querySelectorAll('.bulk-checkbox');
+            checkboxes.forEach(cb => cb.checked = false);
+            selectedTracks.clear();
+            updateSelectedCount();
+        }
+
+        // Toggle play/pause
+        function togglePlay(trackId) {
+            const button = event.target.closest('button');
+            const playIcon = button.querySelector('svg path');
+            
+            if (currentlyPlaying === trackId) {
+                // Pause
+                playIcon.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
+                currentlyPlaying = null;
+            } else {
+                // Play
+                if (currentlyPlaying) {
+                    // Stop other playing track
+                    const otherButton = document.querySelector(`button[onclick="togglePlay(${currentlyPlaying})"] svg path`);
+                    if (otherButton) {
+                        otherButton.setAttribute('d', 'M8 5v14l11-7z');
+                    }
+                }
+                playIcon.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z'); // Pause icon
+                currentlyPlaying = trackId;
+                
+                // Increment play count
+                const track = tracks.find(t => t.id === trackId);
+                if (track) {
+                    track.plays++;
+                    updateTrackPlayCount(trackId, track.plays);
+                }
+            }
+        }
+
+        // Update track play count in UI
+        function updateTrackPlayCount(trackId, plays) {
+            const trackCard = document.querySelector(`[data-track-id="${trackId}"]`);
+            if (trackCard) {
+                const playCountElement = trackCard.querySelector('.text-xs.text-slate-500 span');
+                if (playCountElement) {
+                    playCountElement.textContent = `تم التشغيل ${plays} مرة`;
+                }
+            }
+        }
+
+        // Toggle favorite
+        function toggleFavorite(trackId) {
+            const button = event.target.closest('button');
+            const icon = button.querySelector('svg');
+            const track = tracks.find(t => t.id === trackId);
+            
+            if (track) {
+                track.favorite = !track.favorite;
+                
+                if (track.favorite) {
+                    button.classList.remove('text-slate-400', 'hover:text-red-500');
+                    button.classList.add('text-red-500', 'hover:text-red-600');
+                    icon.setAttribute('fill', 'currentColor');
+                } else {
+                    button.classList.remove('text-red-500', 'hover:text-red-600');
+                    button.classList.add('text-slate-400', 'hover:text-red-500');
+                    icon.setAttribute('fill', 'none');
+                }
+            }
+        }
+
+        // Download single track
+        function downloadTrack(trackId) {
+            const track = tracks.find(t => t.id === trackId);
+            if (track) {
+                // Simulate download
+                const link = document.createElement('a');
+                link.href = 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav';
+                link.download = `somnv_track_${trackId}.mp3`;
+                link.style.display = 'none';
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Show success message
+                showNotification(`تم تحميل ${track.name} بنجاح`, 'success');
+            }
+        }
+
+        // Share track
+        function shareTrack(trackId) {
+            const track = tracks.find(t => t.id === trackId);
+            if (track && navigator.share) {
+                navigator.share({
+                    title: track.name,
+                    text: 'استمع إلى هذا المقطع الموسيقي الرائع',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    showNotification('تم نسخ الرابط إلى الحافظة', 'success');
+                });
+            }
+        }
+
+        // Download selected tracks
+        function downloadSelected() {
+            if (selectedTracks.size === 0) {
+                showNotification('يرجى تحديد مقاطع للتحميل', 'warning');
+                return;
+            }
+
+            selectedTracks.forEach(trackId => {
+                setTimeout(() => downloadTrack(trackId), 100 * trackId);
+            });
+            
+            showNotification(`تم تحميل ${selectedTracks.size} مقطع`, 'success');
+        }
+
+        // Delete selected tracks
+        function deleteSelected() {
+            if (selectedTracks.size === 0) {
+                showNotification('يرجى تحديد مقاطع للحذف', 'warning');
+                return;
+            }
+
+            if (confirm(`هل أنت متأكد من حذف ${selectedTracks.size} مقطع؟`)) {
+                selectedTracks.forEach(trackId => {
+                    const trackCard = document.querySelector(`[data-track-id="${trackId}"]`);
+                    if (trackCard) {
+                        trackCard.remove();
+                    }
+                    tracks = tracks.filter(t => t.id !== trackId);
+                });
+                
+                selectedTracks.clear();
+                updateSelectedCount();
+                updateTrackCount();
+                showNotification('تم حذف المقاطع المحددة', 'success');
+                
+                // Check if no tracks left
+                if (tracks.length === 0) {
+                    showEmptyState();
+                }
+            }
+        }
+
+        // Filter tracks
+        function filterTracks() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const trackCards = document.querySelectorAll('.track-card');
+            
+            trackCards.forEach(card => {
+                const trackName = card.querySelector('h3').textContent.toLowerCase();
+                const isVisible = trackName.includes(searchTerm);
+                card.style.display = isVisible ? 'block' : 'none';
+            });
+        }
+
+        // Sort tracks
+        function sortTracks() {
+            const sortBy = document.getElementById('sortSelect').value;
+            const tracksGrid = document.getElementById('tracksGrid');
+            const trackCards = Array.from(document.querySelectorAll('.track-card'));
+            
+            trackCards.sort((a, b) => {
+                const aId = parseInt(a.dataset.trackId);
+                const bId = parseInt(b.dataset.trackId);
+                const aTrack = tracks.find(t => t.id === aId);
+                const bTrack = tracks.find(t => t.id === bId);
+                
+                switch (sortBy) {
+                    case 'newest':
+                        return new Date(bTrack.date) - new Date(aTrack.date);
+                    case 'oldest':
+                        return new Date(aTrack.date) - new Date(bTrack.date);
+                    case 'most-played':
+                        return bTrack.plays - aTrack.plays;
+                    default:
+                        return 0;
+                }
+            });
+            
+            // Re-append sorted cards
+            trackCards.forEach(card => tracksGrid.appendChild(card));
+        }
+
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('sortSelect').value = 'newest';
+            filterTracks();
+            sortTracks();
+        }
+
+        // Load more tracks
+        function loadMoreTracks() {
+            showNotification('لا توجد مقاطع إضافية للتحميل', 'info');
+        }
+
+        // Update track count
+        function updateTrackCount() {
+            const trackCount = document.getElementById('trackCount');
+            trackCount.textContent = `${tracks.length} مقطع`;
+        }
+
+        // Show empty state
+        function showEmptyState() {
+            const tracksGrid = document.getElementById('tracksGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            tracksGrid.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-large max-w-sm transform transition-all duration-300 translate-x-full`;
+            
+            const colors = {
+                success: 'bg-green-100 text-green-800 border border-green-200',
+                warning: 'bg-amber-100 text-amber-800 border border-amber-200',
+                error: 'bg-red-100 text-red-800 border border-red-200',
+                info: 'bg-blue-100 text-blue-800 border border-blue-200'
+            };
+            
+            notification.className += ` ${colors[type] || colors.info}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Auto remove
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add smooth scrolling behavior
+            document.documentElement.style.scrollBehavior = 'smooth';
+            
+            // Initialize track count
+            updateTrackCount();
+            
+            // Add keyboard navigation support
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    const focused = document.activeElement;
+                    if (focused && focused.onclick) {
+                        e.preventDefault();
+                        focused.click();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

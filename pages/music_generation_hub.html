@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>مولد الموسيقى - مركز إنتاج الموسيقى</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .music-wave {
+            background: linear-gradient(45deg, #3B82F6, #8B5CF6, #EC4899);
+            background-size: 400% 400%;
+            animation: gradient-wave 3s ease infinite;
+        }
+        @keyframes gradient-wave {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.33); }
+            80%, 100% { opacity: 0; }
+        }
+        .loading-dots {
+            animation: loading-dots 1.4s infinite ease-in-out both;
+        }
+        .loading-dots:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dots:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes loading-dots {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+    </style>
+<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fmusicgene9641back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.6"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen" dir="rtl">
+    <!-- Header Navigation -->
+    <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-reverse space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                        </svg>
+                    </div>
+                    <h1 class="text-xl font-bold text-slate-800">مولد الموسيقى</h1>
+                </div>
+
+                <!-- Navigation Menu -->
+                <nav class="hidden md:flex items-center space-x-reverse space-x-8">
+                    <a href="music_generation_hub.html" class="text-blue-600 font-medium border-b-2 border-blue-600 pb-1">المولد</a>
+                    <a href="music_library.html" class="text-slate-600 hover:text-blue-600 transition-colors">المكتبة</a>
+                    <a href="user_profile_settings.html" class="text-slate-600 hover:text-blue-600 transition-colors">الإعدادات</a>
+                    <a href="user_authentication.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">تسجيل الدخول</a>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors" onclick="toggleMobileMenu()">
+                    <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-slate-200">
+            <div class="px-4 py-2 space-y-1">
+                <a href="music_generation_hub.html" class="block px-3 py-2 text-blue-600 font-medium bg-blue-50 rounded-lg">المولد</a>
+                <a href="music_library.html" class="block px-3 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors">المكتبة</a>
+                <a href="user_profile_settings.html" class="block px-3 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors">الإعدادات</a>
+                <a href="user_authentication.html" class="block px-3 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">تسجيل الدخول</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Hero Section -->
+        <section class="text-center mb-12">
+            <div class="relative inline-block mb-6">
+                <div class="absolute inset-0 bg-blue-400 rounded-full opacity-20 pulse-ring"></div>
+                <div class="relative w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto">
+                    <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                    </svg>
+                </div>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">أنشئ موسيقى مميزة بالذكاء الاصطناعي</h2>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">استخدم تقنية الذكاء الاصطناعي المتطورة لإنتاج مقاطع موسيقية هادئة ومميزة لمشاريعك الإبداعية</p>
+        </section>
+
+<!-- Music Genres Selection -->
+<section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+    <div class="bg-white rounded-2xl shadow-large p-6 md:p-8">
+        <!-- Section Header -->
+        <div class="text-center mb-6">
+            <h3 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">اختر نوع الموسيقى المناسب</h3>
+            <p class="text-slate-600">تعرف على الأنواع الموسيقية المتاحة واختر ما يناسب مشروعك</p>
+        </div>
+
+        <!-- Genres Table -->
+        <div class="overflow-hidden rounded-xl border border-slate-200">
+            <table class="w-full text-right">
+                <thead class="bg-gradient-to-r from-blue-50 to-purple-50">
+                    <tr>
+                        <th class="px-6 py-4 text-sm font-bold text-slate-800 border-b border-slate-200">الاسم</th>
+                        <th class="px-6 py-4 text-sm font-bold text-slate-800 border-b border-slate-200">المعنى</th>
+                        <th class="px-6 py-4 text-sm font-bold text-slate-800 border-b border-slate-200">مناسب لـ</th>
+                        <th class="px-6 py-4 text-sm font-bold text-slate-800 border-b border-slate-200">اختيار</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Duttywave Genre -->
+                    <tr class="hover:bg-slate-50 transition-colors cursor-pointer genre-row" data-genre="duttywave">
+                        <td class="px-6 py-4 border-b border-slate-100">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center ml-3">
+                                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-slate-800">Duttywave</p>
+                                    <p class="text-xs text-slate-500">موجة غامضة</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-600 border-b border-slate-100">مزيج من الغموض والموجة</td>
+                        <td class="px-6 py-4 text-sm text-slate-600 border-b border-slate-100">موسيقى إلكترونية غامضة</td>
+                        <td class="px-6 py-4 border-b border-slate-100">
+                            <button class="select-genre-btn w-8 h-8 rounded-full border-2 border-slate-300 hover:border-blue-500 hover:bg-blue-50 transition-all duration-200 flex items-center justify-center" data-genre="duttywave">
+                                <svg class="w-4 h-4 text-blue-600 hidden selected-icon" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- BassNova Genre -->
+                    <tr class="hover:bg-slate-50 transition-colors cursor-pointer genre-row" data-genre="bassnova">
+                        <td class="px-6 py-4 border-b border-slate-100">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg flex items-center justify-center ml-3">
+                                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-slate-800">BassNova</p>
+                                    <p class="text-xs text-slate-500">انفجار الباس</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-600 border-b border-slate-100">نوفا = انفجار، باس = صوت منخفض</td>
+                        <td class="px-6 py-4 text-sm text-slate-600 border-b border-slate-100">موسيقى ديناميكية</td>
+                        <td class="px-6 py-4 border-b border-slate-100">
+                            <button class="select-genre-btn w-8 h-8 rounded-full border-2 border-slate-300 hover:border-purple-500 hover:bg-purple-50 transition-all duration-200 flex items-center justify-center" data-genre="bassnova">
+                                <svg class="w-4 h-4 text-purple-600 hidden selected-icon" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- NoirSync Genre -->
+                    <tr class="hover:bg-slate-50 transition-colors cursor-pointer genre-row" data-genre="noirsync">
+                        <td class="px-6 py-4 border-b border-slate-100">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-gradient-to-r from-slate-600 to-slate-800 rounded-lg flex items-center justify-center ml-3">
+                                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M20 6l-2-2h-3l-1-1h-4l-1 1H6L4 6v2h16V6zm-1 12H5V10h14v8z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-slate-800">NoirSync</p>
+                                    <p class="text-xs text-slate-500">تزامن مظلم</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-600 border-b border-slate-100">تزامن مظلم</td>
+                        <td class="px-6 py-4 text-sm text-slate-600 border-b border-slate-100">موسيقى سينمائية أو لو-فاي</td>
+                        <td class="px-6 py-4 border-b border-slate-100">
+                            <button class="select-genre-btn w-8 h-8 rounded-full border-2 border-slate-300 hover:border-slate-500 hover:bg-slate-50 transition-all duration-200 flex items-center justify-center" data-genre="noirsync">
+                                <svg class="w-4 h-4 text-slate-600 hidden selected-icon" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- EchoRoot Genre -->
+                    <tr class="hover:bg-slate-50 transition-colors cursor-pointer genre-row" data-genre="echoroot">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg flex items-center justify-center ml-3">
+                                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-slate-800">EchoRoot</p>
+                                    <p class="text-xs text-slate-500">صدى الجذور</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-600">صدى الجذور</td>
+                        <td class="px-6 py-4 text-sm text-slate-600">موسيقى هادئة عميقة</td>
+                        <td class="px-6 py-4">
+                            <button class="select-genre-btn w-8 h-8 rounded-full border-2 border-slate-300 hover:border-green-500 hover:bg-green-50 transition-all duration-200 flex items-center justify-center" data-genre="echoroot">
+                                <svg class="w-4 h-4 text-green-600 hidden selected-icon" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Selected Genre Display -->
+        <div id="selectedGenreDisplay" class="hidden mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center ml-3">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-medium text-blue-800">النوع المحدد: <span id="selectedGenreName"></span></p>
+                        <p class="text-sm text-blue-600" id="selectedGenreDescription"></p>
+                    </div>
+                </div>
+                <button id="clearSelection" class="text-slate-500 hover:text-red-500 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+        <!-- Generation Controls -->
+        <section class="bg-white rounded-2xl shadow-large p-6 md:p-8 mb-8">
+            <!-- Preset Indicators -->
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                <div class="flex items-center bg-blue-50 text-blue-700 px-4 py-2 rounded-full">
+                    <svg class="w-5 h-5 ml-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span class="font-medium">النوع: موسيقى هادئة</span>
+                </div>
+                <div class="flex items-center bg-purple-50 text-purple-700 px-4 py-2 rounded-full">
+                    <svg class="w-5 h-5 ml-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zM12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                    </svg>
+                    <span class="font-medium">المدة: 60 ثانية</span>
+                </div>
+            </div>
+
+            <!-- Generation Button -->
+            <div class="text-center mb-8">
+                <button id="generateBtn" onclick="generateMusic()" class="relative group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 md:py-5 md:px-12 rounded-2xl text-lg md:text-xl transition-all duration-300 transform hover:scale-105 shadow-large hover:shadow-xl breathe-button focus-depth">
+                    <span id="btnText" class="flex items-center justify-center">
+                        <span class="text-2xl ml-3">🎵</span>
+                        توليد موسيقى
+                    </span>
+                    <div id="loadingSpinner" class="hidden absolute inset-0 flex items-center justify-center">
+                        <div class="flex space-x-1">
+                            <div class="w-2 h-2 bg-white rounded-full loading-dots"></div>
+                            <div class="w-2 h-2 bg-white rounded-full loading-dots"></div>
+                            <div class="w-2 h-2 bg-white rounded-full loading-dots"></div>
+                        </div>
+                    </div>
+                </button>
+                <p class="text-sm text-slate-500 mt-3">اضغط لإنشاء مقطع موسيقي جديد</p>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="hidden text-center py-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+                    <svg class="w-8 h-8 text-blue-600 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-slate-800 mb-2">جاري إنشاء الموسيقى...</h3>
+                <p class="text-slate-600">يرجى الانتظار بينما نقوم بإنتاج مقطعك الموسيقي المميز</p>
+            </div>
+        </section>
+
+        <!-- Audio Player Section (Hidden initially) -->
+        <section id="audioPlayerSection" class="hidden bg-white rounded-2xl shadow-large p-6 md:p-8 mb-8 fade-in-300">
+            <div class="text-center mb-6">
+                <h3 class="text-xl font-bold text-slate-800 mb-2">مقطعك الموسيقي جاهز!</h3>
+                <p class="text-slate-600">استمع إلى إبداعك الموسيقي الجديد</p>
+            </div>
+
+            <!-- Audio Player -->
+            <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-6">
+                <audio id="audioPlayer" class="w-full mb-4" controls style="height: 40px;">
+                    <source id="audioSource" src type="audio/mpeg" />
+                    متصفحك لا يدعم تشغيل الملفات الصوتية.
+                </audio>
+                
+                <!-- Waveform Visualization Placeholder -->
+                <div class="flex items-center justify-center h-16 bg-white/50 rounded-lg mb-4">
+                    <div class="flex items-end space-x-1 h-8">
+                        <div class="w-1 bg-blue-400 rounded-full music-wave" style="height: 20%;"></div>
+                        <div class="w-1 bg-purple-400 rounded-full music-wave" style="height: 60%; animation-delay: 0.1s;"></div>
+                        <div class="w-1 bg-blue-400 rounded-full music-wave" style="height: 40%; animation-delay: 0.2s;"></div>
+                        <div class="w-1 bg-purple-400 rounded-full music-wave" style="height: 80%; animation-delay: 0.3s;"></div>
+                        <div class="w-1 bg-blue-400 rounded-full music-wave" style="height: 30%; animation-delay: 0.4s;"></div>
+                        <div class="w-1 bg-purple-400 rounded-full music-wave" style="height: 70%; animation-delay: 0.5s;"></div>
+                        <div class="w-1 bg-blue-400 rounded-full music-wave" style="height: 50%; animation-delay: 0.6s;"></div>
+                        <div class="w-1 bg-purple-400 rounded-full music-wave" style="height: 90%; animation-delay: 0.7s;"></div>
+                        <div class="w-1 bg-blue-400 rounded-full music-wave" style="height: 35%; animation-delay: 0.8s;"></div>
+                        <div class="w-1 bg-purple-400 rounded-full music-wave" style="height: 65%; animation-delay: 0.9s;"></div>
+                    </div>
+                </div>
+
+                <!-- Track Info -->
+                <div class="text-center">
+                    <p class="font-medium text-slate-800">مقطع موسيقي هادئ</p>
+                    <p class="text-sm text-slate-600">مدة: 60 ثانية • تم الإنشاء الآن</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Download Section (Hidden initially) -->
+        <section id="downloadSection" class="hidden bg-white rounded-2xl shadow-large p-6 md:p-8 fade-in-600">
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">حمّل مقطعك الموسيقي</h3>
+                <p class="text-slate-600 mb-6">احفظ إبداعك واستخدمه في مشاريعك</p>
+                
+                <!-- Download Button -->
+                <button id="downloadBtn" onclick="downloadTrack()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-medium hover:shadow-large breathe-button focus-depth">
+                    <span class="flex items-center justify-center">
+                        <span class="text-xl ml-3">⬇️</span>
+                        تحميل
+                    </span>
+                </button>
+                
+                <!-- File Info -->
+                <div class="mt-4 p-4 bg-slate-50 rounded-lg">
+                    <p class="text-sm text-slate-600">
+                        <span class="font-medium">اسم الملف:</span> somnv_track.mp3
+                    </p>
+                    <p class="text-sm text-slate-600 mt-1">
+                        <span class="font-medium">الحجم:</span> ~2.3 MB
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Error State (Hidden initially) -->
+        <section id="errorState" class="hidden bg-red-50 border border-red-200 rounded-2xl p-6 md:p-8 text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-red-800 mb-2">حدث خطأ في إنشاء الموسيقى</h3>
+            <p class="text-red-600 mb-6">نعتذر، لم نتمكن من إنشاء المقطع الموسيقي. يرجى المحاولة مرة أخرى.</p>
+            <button onclick="retryGeneration()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 breathe-button focus-depth">
+                إعادة المحاولة
+            </button>
+        </section>
+
+        <!-- Features Section -->
+        <section class="grid md:grid-cols-3 gap-6 mt-12">
+            <div class="bg-white rounded-xl p-6 shadow-medium text-center">
+                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </div>
+                <h3 class="font-bold text-slate-800 mb-2">جودة عالية</h3>
+                <p class="text-sm text-slate-600">مقاطع موسيقية بجودة استوديو احترافية</p>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 shadow-medium text-center">
+                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/>
+                    </svg>
+                </div>
+                <h3 class="font-bold text-slate-800 mb-2">سريع ومباشر</h3>
+                <p class="text-sm text-slate-600">إنشاء فوري للموسيقى في ثوانٍ معدودة</p>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 shadow-medium text-center">
+                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h3 class="font-bold text-slate-800 mb-2">خالية من الحقوق</h3>
+                <p class="text-sm text-slate-600">استخدم الموسيقى في مشاريعك دون قيود</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="text-center">
+                <p class="text-slate-600">© 2025 مولد الموسيقى. جميع الحقوق محفوظة.</p>
+                <div class="flex justify-center space-x-reverse space-x-6 mt-4">
+                    <a href="javascript:void(0)" class="text-slate-500 hover:text-blue-600 transition-colors">الشروط</a>
+                    <a href="javascript:void(0)" class="text-slate-500 hover:text-blue-600 transition-colors">الخصوصية</a>
+                    <a href="javascript:void(0)" class="text-slate-500 hover:text-blue-600 transition-colors">الدعم</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    // Global variables
+    let currentAudioUrl = null;
+    let isGenerating = false;
+    let selectedGenre = null;
+
+    // Genre data
+    const genreData = {
+        duttywave: {
+            name: 'Duttywave',
+            meaning: 'مزيج من الغموض والموجة',
+            suitableFor: 'موسيقى إلكترونية غامضة',
+            color: 'blue'
+        },
+        bassnova: {
+            name: 'BassNova',
+            meaning: 'نوفا = انفجار، باس = صوت منخفض',
+            suitableFor: 'موسيقى ديناميكية',
+            color: 'purple'
+        },
+        noirsync: {
+            name: 'NoirSync',
+            meaning: 'تزامن مظلم',
+            suitableFor: 'موسيقى سينمائية أو لو-فاي',
+            color: 'slate'
+        },
+        echoroot: {
+            name: 'EchoRoot',
+            meaning: 'صدى الجذور',
+            suitableFor: 'موسيقى هادئة عميقة',
+            color: 'green'
+        }
+    };
+
+    // Toggle mobile menu
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        menu.classList.toggle('hidden');
+    }
+
+    // Handle genre selection
+    function handleGenreSelection(genreKey) {
+        // Clear previous selections
+        document.querySelectorAll('.select-genre-btn').forEach(btn => {
+            btn.classList.remove('border-blue-500', 'border-purple-500', 'border-slate-500', 'border-green-500');
+            btn.classList.remove('bg-blue-50', 'bg-purple-50', 'bg-slate-50', 'bg-green-50');
+            btn.classList.add('border-slate-300');
+            btn.querySelector('.selected-icon').classList.add('hidden');
+        });
+
+        // Highlight selected genre
+        const selectedBtn = document.querySelector(`[data-genre="${genreKey}"]`);
+        const genre = genreData[genreKey];
+        selectedBtn.classList.remove('border-slate-300');
+        selectedBtn.classList.add(`border-${genre.color}-500`, `bg-${genre.color}-50`);
+        selectedBtn.querySelector('.selected-icon').classList.remove('hidden');
+
+        // Update selected genre
+        selectedGenre = genreKey;
+
+        // Show selected genre display
+        const display = document.getElementById('selectedGenreDisplay');
+        const genreNameEl = document.getElementById('selectedGenreName');
+        const genreDescEl = document.getElementById('selectedGenreDescription');
+        
+        genreNameEl.textContent = genre.name;
+        genreDescEl.textContent = `${genre.meaning} - ${genre.suitableFor}`;
+        display.classList.remove('hidden');
+
+        // Update preset indicators
+        const presetIndicator = document.querySelector('.flex.items-center.bg-blue-50');
+        if (presetIndicator) {
+            presetIndicator.querySelector('span').textContent = `النوع: ${genre.name}`;
+        }
+    }
+
+    // Clear genre selection
+    function clearGenreSelection() {
+        document.querySelectorAll('.select-genre-btn').forEach(btn => {
+            btn.classList.remove('border-blue-500', 'border-purple-500', 'border-slate-500', 'border-green-500');
+            btn.classList.remove('bg-blue-50', 'bg-purple-50', 'bg-slate-50', 'bg-green-50');
+            btn.classList.add('border-slate-300');
+            btn.querySelector('.selected-icon').classList.add('hidden');
+        });
+
+        selectedGenre = null;
+        document.getElementById('selectedGenreDisplay').classList.add('hidden');
+
+        // Reset preset indicator
+        const presetIndicator = document.querySelector('.flex.items-center.bg-blue-50');
+        if (presetIndicator) {
+            presetIndicator.querySelector('span').textContent = 'النوع: موسيقى هادئة';
+        }
+    }
+
+    // Generate music function (enhanced with genre selection)
+    async function generateMusic() {
+        if (isGenerating) return;
+        
+        // Check if genre is selected
+        if (!selectedGenre) {
+            alert('يرجى اختيار نوع الموسيقى أولاً من الجدول أعلاه');
+            return;
+        }
+        
+        isGenerating = true;
+        const generateBtn = document.getElementById('generateBtn');
+        const btnText = document.getElementById('btnText');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const loadingState = document.getElementById('loadingState');
+        const audioPlayerSection = document.getElementById('audioPlayerSection');
+        const downloadSection = document.getElementById('downloadSection');
+        const errorState = document.getElementById('errorState');
+
+        // Hide previous results
+        audioPlayerSection.classList.add('hidden');
+        downloadSection.classList.add('hidden');
+        errorState.classList.add('hidden');
+
+        // Show loading state
+        btnText.classList.add('hidden');
+        loadingSpinner.classList.remove('hidden');
+        loadingState.classList.remove('hidden');
+        generateBtn.disabled = true;
+
+        // Update loading text with selected genre
+        const loadingText = loadingState.querySelector('p');
+        if (loadingText) {
+            loadingText.textContent = `جاري إنشاء موسيقى ${genreData[selectedGenre].name}...`;
+        }
+
+        try {
+            // Simulate API call with genre parameter
+            await simulateApiCall(selectedGenre);
+            
+            // Mock successful response
+            const mockAudioUrl = 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav';
+            
+            // Update audio player
+            const audioPlayer = document.getElementById('audioPlayer');
+            const audioSource = document.getElementById('audioSource');
+            audioSource.src = mockAudioUrl;
+            audioPlayer.load();
+            
+            // Store current audio URL for download
+            currentAudioUrl = mockAudioUrl;
+            
+            // Update track info with genre
+            const trackInfo = audioPlayerSection.querySelector('.text-center p');
+            if (trackInfo) {
+                trackInfo.textContent = `مقطع ${genreData[selectedGenre].name}`;
+            }
+            
+            // Hide loading state
+            loadingState.classList.add('hidden');
+            
+            // Show audio player and download sections
+            setTimeout(() => {
+                audioPlayerSection.classList.remove('hidden');
+                audioPlayer.play().catch(e => console.log('Auto-play prevented'));
+            }, 300);
+            
+            setTimeout(() => {
+                downloadSection.classList.remove('hidden');
+                
+                // Update download filename
+                const fileInfo = downloadSection.querySelector('.bg-slate-50');
+                if (fileInfo) {
+                    const fileName = fileInfo.querySelector('p span');
+                    if (fileName) {
+                        fileName.textContent = `${genreData[selectedGenre].name.toLowerCase()}_track.mp3`;
+                    }
+                }
+            }, 600);
+
+        } catch (error) {
+            console.error('Music generation failed:', error);
+            
+            // Hide loading state
+            loadingState.classList.add('hidden');
+            
+            // Show error state
+            errorState.classList.remove('hidden');
+        } finally {
+            // Reset button state
+            btnText.classList.remove('hidden');
+            loadingSpinner.classList.add('hidden');
+            generateBtn.disabled = false;
+            isGenerating = false;
+        }
+    }
+
+    // Simulate API call with genre
+    function simulateApiCall(genre) {
+        return new Promise((resolve, reject) => {
+            // Simulate longer processing for complex genres
+            const processingTime = genre === 'bassnova' ? 4000 : 3000;
+            
+            setTimeout(() => {
+                // 90% success rate for demo
+                if (Math.random() > 0.1) {
+                    resolve({ success: true, genre: genre });
+                } else {
+                    reject(new Error('API Error'));
+                }
+            }, processingTime);
+        });
+    }
+
+    // Download track function
+    function downloadTrack() {
+        if (!currentAudioUrl) {
+            alert('لا يوجد مقطع موسيقي للتحميل');
+            return;
+        }
+
+        // Create download link
+        const link = document.createElement('a');
+        link.href = currentAudioUrl;
+        const fileName = selectedGenre ? `${genreData[selectedGenre].name.toLowerCase()}_track.mp3` : 'music_track.mp3';
+        link.download = fileName;
+        link.style.display = 'none';
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // Retry generation
+    function retryGeneration() {
+        const errorState = document.getElementById('errorState');
+        errorState.classList.add('hidden');
+        generateMusic();
+    }
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add smooth scrolling behavior
+        document.documentElement.style.scrollBehavior = 'smooth';
+        
+        // Add event listeners for genre selection
+        document.querySelectorAll('.select-genre-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const genreKey = btn.dataset.genre;
+                handleGenreSelection(genreKey);
+            });
+        });
+
+        // Add event listeners for genre rows
+        document.querySelectorAll('.genre-row').forEach(row => {
+            row.addEventListener('click', () => {
+                const genreKey = row.dataset.genre;
+                handleGenreSelection(genreKey);
+            });
+        });
+
+        // Add event listener for clear selection
+        document.getElementById('clearSelection').addEventListener('click', clearGenreSelection);
+        
+        // Add keyboard navigation support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                const focused = document.activeElement;
+                if (focused && focused.onclick) {
+                    e.preventDefault();
+                    focused.click();
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

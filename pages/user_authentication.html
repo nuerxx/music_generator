@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تسجيل الدخول - مولد الموسيقى</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .auth-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .tab-active {
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+            color: white;
+        }
+        .tab-inactive {
+            background: transparent;
+            color: #64748B;
+        }
+        .input-focus:focus {
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .social-btn {
+            transition: all 0.3s ease;
+        }
+        .social-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .floating-label {
+            transition: all 0.3s ease;
+        }
+        .floating-label.active {
+            transform: translateY(-20px) scale(0.85);
+            color: #3B82F6;
+        }
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fmusicgene9641back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.6"></script>
+</head>
+<body class="min-h-screen auth-gradient" dir="rtl">
+    <!-- Simplified Header -->
+    <header class="bg-white/10 backdrop-blur-md border-b border-white/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo Only -->
+                <div class="flex items-center space-x-reverse space-x-3">
+                    <div class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                        </svg>
+                    </div>
+                    <h1 class="text-xl font-bold text-white">مولد الموسيقى</h1>
+                </div>
+
+                <!-- Back to Home -->
+                <a href="music_generation_hub.html" class="text-white/80 hover:text-white transition-colors flex items-center space-x-reverse space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    <span>العودة للرئيسية</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Authentication Content -->
+    <main class="flex items-center justify-center min-h-screen px-4 py-8">
+        <div class="w-full max-w-md">
+            <!-- Authentication Card -->
+            <div class="glass-effect rounded-2xl shadow-large p-8 slide-in">
+                <!-- Welcome Section -->
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.89 1 3 1.89 3 3V21C3 22.11 3.89 23 5 23H19C20.11 23 21 22.11 21 21V9M19 9H14V4H5V21H19V9Z"/>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-800 mb-2">مرحباً بك</h2>
+                    <p class="text-slate-600">سجل دخولك للوصول إلى مكتبتك الموسيقية</p>
+                </div>
+
+                <!-- Tab Navigation -->
+                <div class="flex bg-slate-100 rounded-xl p-1 mb-6">
+                    <button id="loginTab" onclick="switchTab('login')" class="flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-300 tab-active">
+                        تسجيل الدخول
+                    </button>
+                    <button id="registerTab" onclick="switchTab('register')" class="flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-300 tab-inactive">
+                        إنشاء حساب
+                    </button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm" class="space-y-6">
+                    <!-- Email Field -->
+                    <div class="relative">
+                        <input type="email" id="loginEmail" class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none input-focus transition-all duration-300" placeholder="البريد الإلكتروني" required />
+                        <div class="absolute left-3 top-1/2 transform -translate-y-1/2">
+                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="relative">
+                        <input type="password" id="loginPassword" class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none input-focus transition-all duration-300" placeholder="كلمة المرور" required />
+                        <div class="absolute left-3 top-1/2 transform -translate-y-1/2">
+                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                        </div>
+                        <button type="button" onclick="togglePassword('loginPassword')" class="absolute right-3 top-1/2 transform -translate-y-1/2">
+                            <svg class="w-5 h-5 text-slate-400 hover:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500" />
+                            <span class="mr-2 text-sm text-slate-600">تذكرني</span>
+                        </label>
+                        <a href="javascript:void(0)" onclick="showForgotPassword()" class="text-sm text-blue-600 hover:text-blue-700 transition-colors">نسيت كلمة المرور؟</a>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-medium hover:shadow-large breathe-button focus-depth">
+                        <span id="loginBtnText" class="flex items-center justify-center">
+                            <span class="text-xl ml-2">🔐</span>
+                            تسجيل الدخول
+                        </span>
+                        <div id="loginSpinner" class="hidden">
+                            <svg class="w-5 h-5 loading-spinner mx-auto" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                            </svg>
+                        </div>
+                    </button>
+                </form>
+
+                <!-- Register Form (Hidden initially) -->
+                <form id="registerForm" class="space-y-6 hidden">
+                    <!-- Name Field -->
+                    <div class="relative">
+                        <input type="text" id="registerName" class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none input-focus transition-all duration-300" placeholder="الاسم الكامل" required />
+                        <div class="absolute left-3 top-1/2 transform -translate-y-1/2">
+                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="relative">
+                        <input type="email" id="registerEmail" class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none input-focus transition-all duration-300" placeholder="البريد الإلكتروني" required />
+                        <div class="absolute left-3 top-1/2 transform -translate-y-1/2">
+                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Email Confirmation -->
+                    <div class="relative">
+                        <input type="email" id="confirmEmail" class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none input-focus transition-all duration-300" placeholder="تأكيد البريد الإلكتروني" required />
+                        <div class="absolute left-3 top-1/2 transform -translate-y-1/2">
+                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="relative">
+                        <input type="password" id="registerPassword" class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none input-focus transition-all duration-300" placeholder="كلمة المرور" required />
+                        <div class="absolute left-3 top-1/2 transform -translate-y-1/2">
+                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                        </div>
+                        <button type="button" onclick="togglePassword('registerPassword')" class="absolute right-3 top-1/2 transform -translate-y-1/2">
+                            <svg class="w-5 h-5 text-slate-400 hover:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Terms Acceptance -->
+                    <div class="flex items-start">
+                        <input type="checkbox" id="acceptTerms" class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 mt-1" required />
+                        <label for="acceptTerms" class="mr-2 text-sm text-slate-600">
+                            أوافق على <a href="javascript:void(0)" class="text-blue-600 hover:text-blue-700">الشروط والأحكام</a> و <a href="javascript:void(0)" class="text-blue-600 hover:text-blue-700">سياسة الخصوصية</a>
+                        </label>
+                    </div>
+
+                    <!-- Register Button -->
+                    <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-medium hover:shadow-large breathe-button focus-depth">
+                        <span id="registerBtnText" class="flex items-center justify-center">
+                            <span class="text-xl ml-2">✨</span>
+                            إنشاء حساب
+                        </span>
+                        <div id="registerSpinner" class="hidden">
+                            <svg class="w-5 h-5 loading-spinner mx-auto" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                            </svg>
+                        </div>
+                    </button>
+                </form>
+
+                <!-- Social Authentication -->
+                <div class="mt-8">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-slate-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-white text-slate-500">أو سجل دخولك باستخدام</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 grid grid-cols-2 gap-3">
+                        <!-- Google Button -->
+                        <button onclick="socialLogin('google')" class="social-btn w-full inline-flex justify-center py-3 px-4 border border-slate-300 rounded-xl shadow-soft bg-white text-sm font-medium text-slate-500 hover:bg-slate-50 focus-depth">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            <span class="mr-2">Google</span>
+                        </button>
+
+                        <!-- Facebook Button -->
+                        <button onclick="socialLogin('facebook')" class="social-btn w-full inline-flex justify-center py-3 px-4 border border-slate-300 rounded-xl shadow-soft bg-white text-sm font-medium text-slate-500 hover:bg-slate-50 focus-depth">
+                            <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                            <span class="mr-2">Facebook</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Error Message -->
+                <div id="errorMessage" class="hidden mt-4 p-4 bg-red-50 border border-red-200 rounded-xl">
+                    <div class="flex">
+                        <svg class="w-5 h-5 text-red-400 ml-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                        </svg>
+                        <p id="errorText" class="text-sm text-red-600"></p>
+                    </div>
+                </div>
+
+                <!-- Success Message -->
+                <div id="successMessage" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-xl">
+                    <div class="flex">
+                        <svg class="w-5 h-5 text-green-400 ml-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <p id="successText" class="text-sm text-green-600"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Links -->
+            <div class="text-center mt-6">
+                <p class="text-white/80 text-sm">
+                    هل تحتاج مساعدة؟ 
+                    <a href="javascript:void(0)" class="text-white hover:text-blue-200 transition-colors font-medium">تواصل معنا</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-md">
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">استعادة كلمة المرور</h3>
+                <p class="text-slate-600 text-sm">أدخل بريدك الإلكتروني وسنرسل لك رابط استعادة كلمة المرور</p>
+            </div>
+
+            <form id="forgotPasswordForm" class="space-y-4">
+                <div class="relative">
+                    <input type="email" id="forgotEmail" class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none input-focus" placeholder="البريد الإلكتروني" required />
+                    <div class="absolute left-3 top-1/2 transform -translate-y-1/2">
+                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="flex space-x-reverse space-x-3">
+                    <button type="button" onclick="closeForgotPassword()" class="flex-1 py-3 px-4 border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-colors">
+                        إلغاء
+                    </button>
+                    <button type="submit" class="flex-1 py-3 px-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors">
+                        إرسال
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentTab = 'login';
+        let isProcessing = false;
+
+        // Mock user data for demonstration
+        const mockUsers = [
+            {
+                email: 'user@example.com',
+                password: 'password123',
+                name: 'محمد أحمد'
+            },
+            {
+                email: 'ahmed@example.com',
+                password: 'newpassword123',
+                name: 'أحمد محمد'
+            }
+        ];
+
+        // Switch between login and register tabs
+        function switchTab(tab) {
+            if (isProcessing) return;
+
+            currentTab = tab;
+            const loginTab = document.getElementById('loginTab');
+            const registerTab = document.getElementById('registerTab');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+
+            if (tab === 'login') {
+                loginTab.className = 'flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-300 tab-active';
+                registerTab.className = 'flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-300 tab-inactive';
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+            } else {
+                loginTab.className = 'flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-300 tab-inactive';
+                registerTab.className = 'flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all duration-300 tab-active';
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+            }
+
+            // Clear any error messages
+            hideMessage();
+        }
+
+        // Toggle password visibility
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const type = field.getAttribute('type') === 'password' ? 'text' : 'password';
+            field.setAttribute('type', type);
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            const successDiv = document.getElementById('successMessage');
+            
+            successDiv.classList.add('hidden');
+            errorText.textContent = message;
+            errorDiv.classList.remove('hidden');
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+            const successText = document.getElementById('successText');
+            
+            errorDiv.classList.add('hidden');
+            successText.textContent = message;
+            successDiv.classList.remove('hidden');
+        }
+
+        // Hide messages
+        function hideMessage() {
+            document.getElementById('errorMessage').classList.add('hidden');
+            document.getElementById('successMessage').classList.add('hidden');
+        }
+
+        // Show loading state
+        function showLoading(formType) {
+            isProcessing = true;
+            const btnText = document.getElementById(formType + 'BtnText');
+            const spinner = document.getElementById(formType + 'Spinner');
+            
+            btnText.classList.add('hidden');
+            spinner.classList.remove('hidden');
+        }
+
+        // Hide loading state
+        function hideLoading(formType) {
+            isProcessing = false;
+            const btnText = document.getElementById(formType + 'BtnText');
+            const spinner = document.getElementById(formType + 'Spinner');
+            
+            btnText.classList.remove('hidden');
+            spinner.classList.add('hidden');
+        }
+
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (isProcessing) return;
+
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Basic validation
+            if (!email || !password) {
+                showError('يرجى ملء جميع الحقول المطلوبة');
+                return;
+            }
+
+            if (!isValidEmail(email)) {
+                showError('يرجى إدخال بريد إلكتروني صحيح');
+                return;
+            }
+
+            showLoading('login');
+            hideMessage();
+
+            try {
+                // Simulate API call
+                await simulateApiCall();
+
+                // Check mock credentials
+                const user = mockUsers.find(u => u.email === email && u.password === password);
+                
+                if (user) {
+                    showSuccess('تم تسجيل الدخول بنجاح! جاري التوجيه...');
+                    
+                    // Store user session (mock)
+                    localStorage.setItem('currentUser', JSON.stringify({
+                        email: user.email,
+                        name: user.name,
+                        loginTime: new Date().toISOString()
+                    }));
+
+                    // Redirect after success message
+                    setTimeout(() => {
+                        window.location.href = 'music_generation_hub.html';
+                    }, 1500);
+                } else {
+                    showError('البريد الإلكتروني أو كلمة المرور غير صحيحة');
+                }
+            } catch (error) {
+                showError('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى');
+            } finally {
+                hideLoading('login');
+            }
+        });
+
+        // Handle register form submission
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (isProcessing) return;
+
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const confirmEmail = document.getElementById('confirmEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const acceptTerms = document.getElementById('acceptTerms').checked;
+
+            // Validation
+            if (!name || !email || !confirmEmail || !password) {
+                showError('يرجى ملء جميع الحقول المطلوبة');
+                return;
+            }
+
+            if (!isValidEmail(email)) {
+                showError('يرجى إدخال بريد إلكتروني صحيح');
+                return;
+            }
+
+            if (email !== confirmEmail) {
+                showError('البريد الإلكتروني وتأكيد البريد الإلكتروني غير متطابقين');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+                return;
+            }
+
+            if (!acceptTerms) {
+                showError('يجب الموافقة على الشروط والأحكام');
+                return;
+            }
+
+            // Check if email already exists
+            if (mockUsers.find(u => u.email === email)) {
+                showError('هذا البريد الإلكتروني مسجل مسبقاً');
+                return;
+            }
+
+            showLoading('register');
+            hideMessage();
+
+            try {
+                // Simulate API call
+                await simulateApiCall();
+
+                // Add new user to mock data
+                mockUsers.push({
+                    email: email,
+                    password: password,
+                    name: name
+                });
+
+                showSuccess('تم إنشاء الحساب بنجاح! جاري تسجيل الدخول...');
+
+                // Auto login after registration
+                localStorage.setItem('currentUser', JSON.stringify({
+                    email: email,
+                    name: name,
+                    loginTime: new Date().toISOString()
+                }));
+
+                // Redirect after success message
+                setTimeout(() => {
+                    window.location.href = 'music_generation_hub.html';
+                }, 1500);
+
+            } catch (error) {
+                showError('حدث خطأ في إنشاء الحساب. يرجى المحاولة مرة أخرى');
+            } finally {
+                hideLoading('register');
+            }
+        });
+
+        // Handle forgot password form
+        document.getElementById('forgotPasswordForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('forgotEmail').value;
+            
+            if (!email) {
+                alert('يرجى إدخال البريد الإلكتروني');
+                return;
+            }
+
+            if (!isValidEmail(email)) {
+                alert('يرجى إدخال بريد إلكتروني صحيح');
+                return;
+            }
+
+            try {
+                // Simulate sending reset email
+                await simulateApiCall(1000);
+                alert('تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني');
+                closeForgotPassword();
+            } catch (error) {
+                alert('حدث خطأ في إرسال البريد. يرجى المحاولة مرة أخرى');
+            }
+        });
+
+        // Social login function
+        async function socialLogin(provider) {
+            if (isProcessing) return;
+
+            try {
+                showSuccess(`جاري تسجيل الدخول باستخدام ${provider === 'google' ? 'Google' : 'Facebook'}...`);
+                
+                // Simulate social login
+                await simulateApiCall(2000);
+
+                // Mock successful social login
+                const mockSocialUser = {
+                    email: `user@${provider}.com`,
+                    name: provider === 'google' ? 'مستخدم Google' : 'مستخدم Facebook',
+                    loginTime: new Date().toISOString(),
+                    provider: provider
+                };
+
+                localStorage.setItem('currentUser', JSON.stringify(mockSocialUser));
+
+                setTimeout(() => {
+                    window.location.href = 'music_generation_hub.html';
+                }, 1000);
+
+            } catch (error) {
+                showError(`فشل تسجيل الدخول باستخدام ${provider === 'google' ? 'Google' : 'Facebook'}`);
+            }
+        }
+
+        // Show forgot password modal
+        function showForgotPassword() {
+            document.getElementById('forgotPasswordModal').classList.remove('hidden');
+        }
+
+        // Close forgot password modal
+        function closeForgotPassword() {
+            document.getElementById('forgotPasswordModal').classList.add('hidden');
+            document.getElementById('forgotEmail').value = '';
+        }
+
+        // Email validation
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Simulate API call
+        function simulateApiCall(delay = 2000) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    // 95% success rate for demo
+                    if (Math.random() > 0.05) {
+                        resolve({ success: true });
+                    } else {
+                        reject(new Error('Network Error'));
+                    }
+                }, delay);
+            });
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('forgotPasswordModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeForgotPassword();
+            }
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in
+            const currentUser = localStorage.getItem('currentUser');
+            if (currentUser) {
+                const userData = JSON.parse(currentUser);
+                showSuccess(`مرحباً ${userData.name}! جاري التوجيه إلى لوحة التحكم...`);
+                setTimeout(() => {
+                    window.location.href = 'music_generation_hub.html';
+                }, 1500);
+                return;
+            }
+
+            // Add smooth scrolling
+            document.documentElement.style.scrollBehavior = 'smooth';
+
+            // Add keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeForgotPassword();
+                }
+            });
+
+            // Auto-fill demo credentials for testing
+            if (window.location.search.includes('demo=true')) {
+                document.getElementById('loginEmail').value = 'user@example.com';
+                document.getElementById('loginPassword').value = 'password123';
+            }
+        });
+    </script>
+</body>
+</html>
